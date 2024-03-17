@@ -23,28 +23,35 @@ enum layer_names {
     _THREE
 };
 
-// Light LEDs 6 to 9 and 12 to 15 red when caps lock is active. Hard to ignore!
+// Light LED 20 (CAPS lock key) in green when caps lock is active
 const rgblight_segment_t PROGMEM capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {20, 1, HSV_GREEN}       // Light 4 LEDs, starting with LED 6
+    {20, 1, HSV_RED}       // Light 4 LEDs, starting with LED 6
     // {12, 4, HSV_RED}       // Light 4 LEDs, starting with LED 12
 );
-// Light LEDs 9 & 10 in cyan when keyboard layer 1 is active
+// Default layer color
 const rgblight_segment_t PROGMEM base_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {0, 0, HSV_AZURE_}
 );
-// Light LEDs 11 & 12 in purple when keyboard layer 2 is active
+// Light all the changed keys in purple when function layer is active
 const rgblight_segment_t PROGMEM function_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {4, 2, HSV_PURPLE}, 
-    {38, 1, HSV_PURPLE}, 
-    {7, 6, HSV_PURPLE}
+    {0, 6, HSV_PURPLE},  // 1-6 are left underglow
+    {39, 6, HSV_PURPLE},   // 39-44 are right underglow
+    {38, 1, HSV_PURPLE}, // 38 is FN
+    {7, 6, HSV_PURPLE},   // 7-12 are number keys 1-6
+    {45, 6, HSV_PURPLE}   // 45-51 are number keys 7-10 and - and =
+);
+// Light all the changed keys in purple when function layer is active
+const rgblight_segment_t PROGMEM layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {15, 1, HSV_BLUE}, // 15 is W
+    {21, 3, HSV_BLUE} // 21-23 are A, S, and D
 );
 
 // Now define the array of layers. Later layers take precedence
 const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
     capslock_layer,
     base_layer,    // Overrides caps lock layer
-    function_layer    // Overrides other layers
-    // my_layer3_layer     // Overrides other layers
+    function_layer,    // Overrides other layers
+    layer2_layer     // Overrides other layers
 );
 bool led_update_user(led_t led_state) {
     rgblight_set_layer_state(0, led_state.caps_lock);
@@ -56,7 +63,7 @@ layer_state_t default_layer_state_set_user(layer_state_t state) {
 }
 layer_state_t layer_state_set_user(layer_state_t state) {
     rgblight_set_layer_state(2, layer_state_cmp(state, _FN));
-    // rgblight_set_layer_state(3, layer_state_cmp(state, _TWO));
+    rgblight_set_layer_state(3, layer_state_cmp(state, _TWO));
     return state;
 }
 
@@ -78,10 +85,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_BASE] = LAYOUT_rspace_split_bksp(
             KC_ESC, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6,                KC_7, KC_8, KC_9, KC_0, KC_MINS, KC_EQL, KC_GRV, KC_BSPC,    KC_MUTE,
-            KC_TAB,  KC_Q, KC_W, KC_E, KC_R, KC_T,                     KC_Y, KC_U, KC_I, KC_O, KC_P, KC_LBRC, KC_RBRC,   KC_BSLS,   KC_HOME,
-    KC_1,   KC_CAPS, KC_A, KC_S, KC_D, KC_F, KC_G,                     KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT,    KC_ENT,         KC_END,
-    KC_2,   KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B,                     KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT,                   KC_UP,
-    KC_3,   KC_LCTL, KC_LGUI, KC_LALT, MO(1), KC_SPC,                   KC_SPC, KC_RALT, KC_RCTL,                               KC_LEFT, KC_DOWN, KC_RGHT
+            KC_TAB,  KC_Q, KC_W, KC_E, KC_R, KC_T,                     KC_Y, KC_U, KC_I, KC_O, KC_P, KC_LBRC, KC_RBRC,   KC_BSLS,   KC_GRV,
+    KC_PGUP,KC_CAPS, KC_A, KC_S, KC_D, KC_F, KC_G,                     KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT,    KC_ENT,         KC_DEL,
+    KC_PGDN,KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B,                     KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT,                     KC_UP,
+    TG(2),  KC_LCTL, KC_LGUI, KC_LALT, MO(1), KC_SPC,                   KC_SPC, KC_RALT, KC_RCTL,                               KC_LEFT, KC_DOWN, KC_RGHT
 ),
 
 [_FN] = LAYOUT_rspace_split_bksp(
@@ -96,7 +103,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                 KC_TRNS,  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,   KC_TRNS,   KC_TRNS,
     KC_TRNS,   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,    KC_TRNS,         KC_TRNS,
     KC_TRNS,   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                   KC_TRNS,
-    KC_TRNS,   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                              KC_TRNS, KC_TRNS, KC_TRNS,                               KC_TRNS, KC_TRNS, KC_TRNS
+    KC_TRNS,   KC_TRNS, KC_NO,   KC_TRNS, KC_NO,   KC_TRNS,                              KC_TRNS, KC_TRNS, KC_TRNS,                               KC_TRNS, KC_TRNS, KC_TRNS
 ),
 [_THREE] = LAYOUT_rspace_split_bksp(
                 KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,    KC_TRNS,
