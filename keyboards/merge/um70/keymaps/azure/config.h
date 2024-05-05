@@ -24,5 +24,7 @@
 
 #define RGBLIGHT_LAYERS
 #define RGBLIGHT_MAX_LAYERS 4
+#define RGBLIGHT_SLEEP  // allows us to use rgblight_suspend() and rgblight_wakeup() in keymap.c
+#define RGBLIGHT_TIMEOUT 30000  // 30 seconds
 
 #define HSV_AZURE_      155, 180, 125
