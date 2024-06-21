@@ -67,6 +67,23 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     return state;
 }
 
+
+// const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+// 	[0] = KEYMAP(
+// 		M(0), M(1)
+// 	),
+// };
+
+// const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt) {
+// 	if (record->event.pressed) {
+// 		switch(id) {
+// 			case 0:
+// 				return MACRO(T(SPC), W(4), T(LCTL), END);
+// 		}
+// 	}
+// 	return MACRO_NONE;
+// };
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /*
@@ -135,6 +152,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 #ifdef OLED_ENABLE
 void suspend_power_down_user(void) {
     oled_off();
+    // rgblight_suspend();
 }
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
